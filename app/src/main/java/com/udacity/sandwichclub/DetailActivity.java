@@ -10,6 +10,8 @@ import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
+import org.json.JSONException;
+
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
@@ -36,11 +38,15 @@ public class DetailActivity extends AppCompatActivity {
 
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
         String json = sandwiches[position];
-        Sandwich sandwich = JsonUtils.parseSandwichJson(json);
-        if (sandwich == null) {
-            // Sandwich data unavailable
-            closeOnError();
-            return;
+        Sandwich sandwich = new Sandwich();
+        try {
+            sandwich = JsonUtils.parseSandwichJson(json);
+        } catch (JSONException e) {
+            if (sandwich == null) {
+                // Sandwich data unavailable
+                closeOnError();
+                return;
+            }
         }
 
         populateUI();
